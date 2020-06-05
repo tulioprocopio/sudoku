@@ -42,6 +42,7 @@ def addImutaveis():
                 listaNaoPodeMudar.append(str(linha)+str(coluna))
     
 def regras():
+    from acoes import AcaoJogador
     global bateNum
     global fimJogo
     global valor
@@ -51,30 +52,42 @@ def regras():
     global listaVlrCorreto
     global conflitoQuad
     global posicaoConflito
+    global listaNaoPodeMudar
     bAux = False
     cordenadas = False
     while True:
-        cordenadaLinha  = input("Qual a cordenada de linha?  ")        
-        if int(cordenadaLinha) in listaVlrCorreto:
-            cordenadaColuna = input("Qual a cordenada de coluna?  ")
-            if int(cordenadaColuna) in listaVlrCorreto:
-                valor = input("Qual o valor que deseja colocar?  ")
-                if int(valor) in listaVlrCorreto:
-                    cordenadas = True
-                else:
-                    print("Valor invalido!")
-                    cordenadas = False
-            else:
-                print("Cordenada da Coluna invalida.")
-                cordenadas = False
-        else:
-            print("Cordenada da Linha invalida")
-            cordenadas = False
+        #cordenadaLinha  = input("Qual a cordenada de linha?  ")        
+        #if int(cordenadaLinha) in listaVlrCorreto:
+        #    cordenadaColuna = input("Qual a cordenada de coluna?  ")
+        #    if int(cordenadaColuna) in listaVlrCorreto:
+        #        valor = input("Qual o valor que deseja colocar?  ")
+        #
+        #        if int(valor) in listaVlrCorreto:
+        #            cordenadas = True
+        #        else:
+        #            print("Valor invalido!")
+        #            cordenadas = False
+        #    else:
+        #        print("Cordenada da Coluna invalida.")
+        #        cordenadas = False
+        #else:
+        #    print("Cordenada da Linha invalida")
+        #    cordenadas = False
+        acaoAtual = [AcaoJogador.inserir(matriz)]
+        cordenadaLinha = acaoAtual[0][1][0]
+        cordenadaColuna = acaoAtual[0][1][1]
+        valor = acaoAtual[0][1][2]
+        cordenadas = True
 
-        if cordenadas:                                         
-            verificaConflito()
+        print('teste -> '+str(acaoAtual))
+        #print('Lista que não pode mudar -> '+str(listaNaoPodeMudar))
+        #print('linha -> '+str(cordenadaLinha))
+        verificaConflito()
+        verificaQuadrante()
+        if not bConflito:                                         
+            #verificaConflito()
             if not bNaoPodeAlterar:
-                verificaQuadrante()            
+                #verificaQuadrante()
                 matriz[int(cordenadaLinha)-1][int(cordenadaColuna)-1] = valor                                    
             
             aux=0
@@ -129,7 +142,8 @@ def verificaConflito(acao=None):
     global matriz
     global posicaoConflito
     global bNaoPodeAlterar
-    for i in range(len(listaNaoPodeMudar)):                    
+    
+    for i in range(len(listaNaoPodeMudar)):     
         if listaNaoPodeMudar[i] == str(int(cordenadaLinha)-1) + str(int(cordenadaColuna)-1):
             fimJogo = False
             bateNum = True
@@ -177,6 +191,7 @@ def verificaQuadrante(acao=None):
     global matriz
     global conflitoQuad    
     global posicaoConflito
+    global bConflito
     colunaAux=0
     linhaAux=0
     posicaoColorirQuadAux = []
@@ -219,12 +234,12 @@ def verificaQuadrante(acao=None):
     
     
     if conflitoQuad:
+        bConflito = True
         if not verificaArray(posicaoColorirQuadAux[auxiliar]):
             posicaoConflito.append(posicaoColorirQuadAux[auxiliar])
             posicaoConflito.append(str(int(cordenadaLinha)-1)+str(int(cordenadaColuna)-1))
-        else:
-            print('existe')
-        print("Existe conflitos no quadrante!")                        
+        
+        #print("Existe conflitos no quadrante!")                        
 
 
     
@@ -266,19 +281,23 @@ def desenhaQuadrado():
                 meio = meio+chr(9475)
                 aux = aux+3
             elif i == 25:
-                if (str(conta)+str(8)) in posicaoConflito:
-                    meio = meio+'\033[31m'+matriz[conta][8]+'\033[0;0m'+' '+chr(9475)
-                elif (str(conta)+str(8)) in listaNaoPodeMudar:
+                #if (str(conta)+str(8)) in posicaoConflito:
+                #    meio = meio+'\033[31m'+matriz[conta][8]+'\033[0;0m'+' '+chr(9475)
+                #elif (str(conta)+str(8)) in listaNaoPodeMudar:
+                #    meio = meio+'\033[32m'+matriz[conta][8]+'\033[0;0m'+' '+chr(9475)
+                if (str(conta)+str(8)) in listaNaoPodeMudar:
                     meio = meio+'\033[32m'+matriz[conta][8]+'\033[0;0m'+' '+chr(9475)
                 else:
                     meio = meio+ matriz[conta][8]+' '+chr(9475)
                 
             else:
                 if passou == 0:
-                    if (str(conta)+str(auxColuna)) in posicaoConflito:
-                        meio = meio + '\033[31m'+matriz[conta][auxColuna]+'\033[0;0m'
-                    elif (str(conta)+str(auxColuna)) in listaNaoPodeMudar:
-                        meio = meio + '\033[32m'+matriz[conta][auxColuna]+'\033[0;0m'                                                            
+                    #if (str(conta)+str(auxColuna)) in posicaoConflito:
+                    #    meio = meio + '\033[31m'+matriz[conta][auxColuna]+'\033[0;0m'
+                    #elif (str(conta)+str(auxColuna)) in listaNaoPodeMudar:
+                    #    meio = meio + '\033[32m'+matriz[conta][auxColuna]+'\033[0;0m'
+                    if (str(conta)+str(auxColuna)) in listaNaoPodeMudar:
+                        meio = meio + '\033[32m'+matriz[conta][auxColuna]+'\033[0;0m'
                     else:
                         meio = meio + matriz[conta][auxColuna]
                     
