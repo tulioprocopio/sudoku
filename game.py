@@ -115,7 +115,7 @@ def regras():
 
         
 def verificaArray(a):
-    print('esse é a merda do A -> '+str(a))
+    
     if a in posicaoConflito:
         return True
     return False
